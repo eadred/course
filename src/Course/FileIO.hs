@@ -61,8 +61,7 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo: Course.FileIO#main"
+main = run =<< headOr "" <$> getArgs
 
 type FilePath =
   Chars
@@ -71,31 +70,29 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+run fpath = printFiles =<< getFiles (pure fpath)
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles fpaths = sequence $ getFile <$> fpaths
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo: Course.FileIO#getFile"
+getFile fpath = (\x -> (fpath, x)) <$> readFile fpath
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+printFiles fs = flattenIOs $ uncurry printFile <$> fs
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
+printFile p c = flattenIOs $ putStrLn <$> (p :. lines c)
+
+flattenIOs :: List (IO ()) -> IO ()
+flattenIOs ios = void $ sequence ios
 
