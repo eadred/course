@@ -260,14 +260,16 @@ list1 p = p +~ p
 init .: rest = let prepend a = (a :.) <$> rest in
                    init >>= prepend
 
+infixr 3 .:
+
 -- | Return a parser that tries to satisfy the first parser
 --   * If this fails then fail the whole thing
 --   * If this succeeds then try and run the second parser zero or more times,
 --     consuming as much of the remaining input as possible
 (+~) :: Parser a -> Parser a -> Parser (List a)
 init +~ rest = init .: list rest
---init +~ rest = let prepend a = (a :.) <$> list rest in
---                   init >>= prepend
+
+infixl 3 +~
 
 -- | Return a parser that produces a character but fails if
 --
